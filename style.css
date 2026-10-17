@@ -1,0 +1,167 @@
+
+/* ---------- 1. Design tokens ---------- */
+:root {
+  --bg: #f7f8fa;
+  --card: #fff;
+  --text: #1d2433;
+  --muted: #5b6475;
+  --accent: #2457d6;
+  --border: #d6dae3;
+
+  --ok-bg: #e6f6ec;
+  --ok: #17612f;
+
+  --err-bg: #fdeaea;
+  --err: #9b1c1c;
+
+  --load-bg: #eaf0fd;
+  --load: #1c3f99;
+}
+
+/* ---------- 2. Base / reset ---------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+/* ---------- 3. Layout ---------- */
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* ---------- 4. Form controls ---------- */
+label {
+  display: block;
+  margin: 14px 0 4px;
+  font-weight: 600;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: inherit;
+}
+
+input:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+form {
+  margin-top: 16px;
+  padding-top: 4px;
+}
+
+form button {
+  margin-top: 14px;
+}
+
+/* ---------- 5. Buttons ---------- */
+button {
+  font: inherit;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- 6. Status messages ---------- */
+/* Distinct styles for loading, success and error (required by spec). */
+#status {
+  min-height: 1.5em;
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+#status:empty {
+  padding: 0;
+}
+
+#status.loading {
+  background: var(--load-bg);
+  color: var(--load);
+}
+
+#status.success {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+#status.error {
+  background: var(--err-bg);
+  color: var(--err);
+}
+
+/* ---------- 7. Notes list ---------- */
+#notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+
+.note {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+/* FIX: long titles (up to 100 chars, possibly without spaces) must wrap. */
+.note h2 {
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Body preserves user line-breaks and wraps long tokens too. */
+.note p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Delete button inherits .note context; darker red than base button. */
+.note .delete-btn {
+  background: var(--err);
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+.empty {
+  color: var(--muted);
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
