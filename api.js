@@ -19,6 +19,7 @@ function setStatus(message, type) {
 function setBusy(busy) {                   // disable buttons while requests run
   loadBtn.disabled = busy;
   submitBtn.disabled = busy;
+  list.querySelectorAll(".delete-btn").forEach((b) => (b.disabled = busy));
 }
 
 function showEmptyState() {
@@ -44,7 +45,13 @@ function createNoteElement(note) {
   const p = document.createElement("p");
   p.textContent = note.body || "";
 
-  li.append(h2, p);
+  const del = document.createElement("button");
+  del.type = "button";
+  del.className = "delete-btn";
+  del.textContent = "Delete";
+  del.addEventListener("click", () => deleteNote(note.id, li));
+
+  li.append(h2, p, del);
   return li;
 }
 
@@ -123,6 +130,33 @@ async function createNote(event) {
   } catch (error) {
     console.error(error);
     setStatus("Sorry, we could not save your note. Please try again.", "error");
+  } finally {
+    setBusy(false);
+  }
+}
+
+/* ---------- DELETE: remove a note ---------- */
+/*
+ * JSONPlaceholder is a fake API: it accepts POST and DELETE and replies with
+ * success, but it never stores anything. A note we "create" gets id 101, and
+ * DELETE /posts/101 still answers 200 even though nothing was saved.
+ *
+ * Approach: send the real DELETE request and, only when the server answers
+ * with a success status, remove the <li> from the page. The page is therefore
+ * the source of truth for this demo; reloading fetches the original 10 notes
+ * again. A real backend would persist the change and DELETE would be durable.
+ */
+async function deleteNote(id, element) {
+  setBusy(true);
+  setStatus("Deleting note...", "loading");
+  try {
+    const { status } = await request(`${API_URL}/${id}`, { method: "DELETE" });
+    element.remove();
+    if (list.children.length === 0) showEmptyState();
+    setStatus(`Note ${id} deleted (status ${status}).`, "success");
+  } catch (error) {
+    console.error(error);
+    setStatus(`Sorry, we could not delete note ${id}. Please try again.`, "error");
   } finally {
     setBusy(false);
   }
